@@ -3,3 +3,5 @@
 /tracker-libs/.gradle/
 /tracker-libs/build/
 /tracker-libs/build/classes/java/main/
+/**/build/
+/**/src/main/resources/static/
