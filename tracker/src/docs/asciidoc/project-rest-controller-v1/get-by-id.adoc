@@ -1,0 +1,19 @@
+==== Get project by id
+
+Возвращает проект по id.
+
+===== Curl example
+
+include::{snippets}/project-rest-controller-v1-test/get-by-id/curl-request.adoc[]
+
+===== HTTP Request
+
+include::{snippets}/project-rest-controller-v1-test/get-by-id/http-request.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/project-rest-controller-v1-test/get-by-id/http-response.adoc[]
+
+====== Response body
+
+include::{snippets}/project-rest-controller-v1-test/get-by-id/response-body.adoc[]

@@ -1,0 +1,52 @@
+:doctype: book
+:sectlinks:
+:toc: left
+:toclevels: 4
+:icons: font
+:source-highlighter: highlightjs
+
+
+== Rest convention
+
+=== HTTP status codes
+
+Коды состояния HTTP
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| Стандартный ответ на успешные HTTP-запросы.
+
+| `201 Created`
+| Запрос был выполнен, и в результате был создан новый ресурс.
+
+| `400 Bad Request`
+| Сервер не может или не будет обрабатывать запрос из-за чего-то, что воспринимается как ошибка клиента (например, искаженный синтаксис запроса, неверный кадр сообщения запроса или вводящая в заблуждение маршрутизация запроса).
+
+| `403 Forbidden`
+| Сервер понял запрос, но отказано в доступе.
+
+| `404 Not Found`
+| Запрошенный ресурс не может быть найден.
+|===
+
+[[Endpoints]]
+== Endpoints
+
+=== Project rest controller v1
+
+Эндпоинты связанные с проектом.
+
+include::{snippets}/../../src/docs/asciidoc/project-rest-controller-v1/get-by-id.adoc[]
+include::{snippets}/../../src/docs/asciidoc/project-rest-controller-v1/create-new-project.adoc[]
+
+=== Task rest controller v1
+
+Эндпоинты связанные с тасками в проекте.
+
+include::{snippets}/../../src/docs/asciidoc/task-rest-controller-v1/create-new-task.adoc[]
+include::{snippets}/../../src/docs/asciidoc/task-rest-controller-v1/get-all-by-project-id.adoc[]
+include::{snippets}/../../src/docs/asciidoc/task-rest-controller-v1/get-by-id.adoc[]
+
+

@@ -1,0 +1,18 @@
+==== Get by id
+Возвращает таску по id.
+
+===== Curl example
+
+include::{snippets}/task-rest-controller-v1-test/get-by-id/curl-request.adoc[]
+
+===== HTTP Request
+
+include::{snippets}/task-rest-controller-v1-test/get-by-id/http-request.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/task-rest-controller-v1-test/get-by-id/http-response.adoc[]
+
+====== Response body
+
+include::{snippets}/task-rest-controller-v1-test/get-by-id/response-body.adoc[]

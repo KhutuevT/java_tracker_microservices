@@ -1,0 +1,22 @@
+==== Create new project
+Создаёт новый проект.
+
+===== Curl example
+
+include::{snippets}/project-rest-controller-v1-test/create-new-project/curl-request.adoc[]
+
+===== HTTP Request
+
+include::{snippets}/project-rest-controller-v1-test/create-new-project/http-request.adoc[]
+
+====== HTTP Request body
+
+include::{snippets}/project-rest-controller-v1-test/create-new-project/request-body.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/project-rest-controller-v1-test/create-new-project/http-response.adoc[]
+
+====== Response body
+
+include::{snippets}/project-rest-controller-v1-test/create-new-project/response-body.adoc[]

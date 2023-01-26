@@ -1,0 +1,22 @@
+==== Create new task
+Создаёт новую таску в проекте.
+
+===== Curl example
+
+include::{snippets}/task-rest-controller-v1-test/create-new-task/curl-request.adoc[]
+
+===== HTTP Request
+
+include::{snippets}/task-rest-controller-v1-test/create-new-task/http-request.adoc[]
+
+====== HTTP Request body
+
+include::{snippets}/task-rest-controller-v1-test/create-new-task/request-body.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/task-rest-controller-v1-test/create-new-task/http-response.adoc[]
+
+====== Response body
+
+include::{snippets}/task-rest-controller-v1-test/create-new-task/response-body.adoc[]

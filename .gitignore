@@ -1,0 +1,5 @@
+# Project exclude paths
+/.gradle/
+/tracker-libs/.gradle/
+/tracker-libs/build/
+/tracker-libs/build/classes/java/main/

@@ -1,0 +1,3 @@
+rootProject.name = 'tracker-microservices'
+
+include 'tracker', 'email-sender', 'tracker-libs'

@@ -1,0 +1,1 @@
+Документация `http://localhost:8080/static/index.html`

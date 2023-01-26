@@ -1,0 +1,60 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="6.1.0" author="tamerlan.khutuev">
+        <createTable tableName="user_projects">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="project_role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6.2.0" author="tamerlan.khutuev">
+        <addForeignKeyConstraint baseTableName="user_projects"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_projects_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+
+    <changeSet id="6.3.0" author="tamerlan.khutuev">
+        <addForeignKeyConstraint baseTableName="user_projects"
+                                 baseColumnNames="project_id"
+                                 constraintName="fk_user_projects_project"
+                                 referencedTableName="projects"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+
+    <changeSet id="6.4.0" author="tamerlan.khutuev">
+        <addForeignKeyConstraint baseTableName="user_projects"
+                                 baseColumnNames="project_role_id"
+                                 constraintName="fk_user_project_project_role"
+                                 referencedTableName="project_roles"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>

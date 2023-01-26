@@ -1,0 +1,22 @@
+==== Name
+//Describe
+
+===== Curl example
+
+//include::{snippets}/*/curl-request.adoc[]
+
+===== HTTP Request
+
+//include::{snippets}/*/http-request.adoc[]
+
+====== HTTP Request body
+
+//include::{snippets}/*/request-body.adoc[]
+
+===== HTTP Response
+
+//include::{snippets}/*/http-response.adoc[]
+
+====== Response body
+
+//include::{snippets}/*/response-body.adoc[]
