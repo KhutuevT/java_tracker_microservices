@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group 'org.backend.emailservice.client'
+version 'unspecified'
+
+sourceCompatibility = 17
+targetCompatibility = 17
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-json:3.0.2'
+}
