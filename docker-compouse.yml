@@ -34,7 +34,7 @@ services:
       - rabbitmq_net
 
   email-sender:
-    build: email-sender/
+    build: email-sender1/
     ports:
       - "8085:8085"
     environment:

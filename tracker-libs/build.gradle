@@ -1,9 +1,0 @@
-plugins {
-    id 'java'
-}
-
-group 'org.backend.tracker.libs'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 17
-targetCompatibility = 17

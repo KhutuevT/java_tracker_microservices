@@ -9,9 +9,23 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/email-sender" />
+            <option value="$PROJECT_DIR$/email-service" />
+            <option value="$PROJECT_DIR$/email-service/email-service-client" />
+            <option value="$PROJECT_DIR$/email-service/email-service-server" />
             <option value="$PROJECT_DIR$/tracker" />
-            <option value="$PROJECT_DIR$/tracker-libs" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/email-service/email-service-server" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/email-service" />
+            <option value="$PROJECT_DIR$/email-service/email-service-client" />
+            <option value="$PROJECT_DIR$/email-service/email-service-server" />
+            <option value="$PROJECT_DIR$/tracker" />
           </set>
         </option>
       </GradleProjectSettings>

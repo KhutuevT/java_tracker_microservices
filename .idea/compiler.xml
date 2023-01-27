@@ -13,6 +13,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="17">
       <module name="email-sender" target="17" />
+      <module name="email-sender-service" target="17" />
       <module name="email-sender.main" target="17" />
       <module name="email-sender.test" target="17" />
       <module name="tracker" target="17" />
@@ -22,5 +23,10 @@
       <module name="tracker.main" target="17" />
       <module name="tracker.test" target="17" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="email-sender-service" options="-parameters" />
+    </option>
   </component>
 </project>
