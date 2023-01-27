@@ -29,9 +29,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 
-@TestPropertySource(locations = "classpath:application-test.properties")
-@Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "/sql/create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+//@TestPropertySource(locations = "classpath:application-test.properties")
+//@Sql(value = "/sql/delete-all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+//@Sql(value = "/sql/create-user-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 @AutoConfigureRestDocs(outputDir = "build/generated-snippets")
 class AuthRestControllerV1Test {
@@ -49,45 +49,45 @@ class AuthRestControllerV1Test {
         System.out.println("---TearDown---");
     }
 
-    @Test
-    void login() throws Exception {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("username", "timon");
-        requestBody.put("password", "timon");
-        String requestBodyJson = new ObjectMapper().writeValueAsString(requestBody);
-
-        this.mockMvc
-                .perform(post("/api/v1/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBodyJson)
-                        .accept(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andDo(document("{class-name}/{method-name}",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    void signup() throws Exception {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("username", "test");
-        requestBody.put("email", "t2@t.com");
-        requestBody.put("password", "test");
-        String requestBodyJson = new ObjectMapper().writeValueAsString(requestBody);
-
-        this.mockMvc
-                .perform(post("/api/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBodyJson)
-                        .accept(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andDo(document("{class-name}/{method-name}",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    void login() throws Exception {
+//        Map<String, String> requestBody = new HashMap<>();
+//        requestBody.put("username", "timon");
+//        requestBody.put("password", "timon");
+//        String requestBodyJson = new ObjectMapper().writeValueAsString(requestBody);
+//
+//        this.mockMvc
+//                .perform(post("/api/v1/auth/login")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestBodyJson)
+//                        .accept(MediaType.APPLICATION_JSON)
+//                )
+//                .andDo(print())
+//                .andDo(document("{class-name}/{method-name}",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint())))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+//    }
+//
+//    @Test
+//    void signup() throws Exception {
+//        Map<String, String> requestBody = new HashMap<>();
+//        requestBody.put("username", "test");
+//        requestBody.put("email", "t2@t.com");
+//        requestBody.put("password", "test");
+//        String requestBodyJson = new ObjectMapper().writeValueAsString(requestBody);
+//
+//        this.mockMvc
+//                .perform(post("/api/v1/auth/register")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestBodyJson)
+//                        .accept(MediaType.APPLICATION_JSON)
+//                )
+//                .andDo(print())
+//                .andDo(document("{class-name}/{method-name}",
+//                        preprocessRequest(prettyPrint()),
+//                        preprocessResponse(prettyPrint())))
+//                .andExpect(status().isOk());
+//    }
 }

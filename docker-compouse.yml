@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  db:
+  tracker_db:
     image: postgres
     container_name: db_main
     restart: always
@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
 
-  test_db:
+  tracker_test_db:
     image: postgres
     container_name: db_test
     restart: always
@@ -33,6 +33,44 @@ services:
     networks:
       - rabbitmq_net
 
+  email-sender:
+    build: email-sender/
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_MAIL_HOST=aboba
+      - SPRING_MAIL_PORT=aboba
+      - SPRING_MAIL_PROTOCOL=aboba
+      - SPRING_MAIL_USERNAME=aboba
+      - SPRING_MAIL_PASSWORD=aboba
+    depends_on:
+      - rabbitmq
+
+  tracker:
+    build: tracker/
+    ports:
+      - "8080:8080"
+
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://tracker_db:5432/itrum_tracker_java
+      - SPRING_DATASOURCE_USERNAME=itrumadmin
+      - SPRING_DATASOURCE_PASSWORD=aboba
+
+      - SPRING_DATASOURCE_FOR_TEST_URL=jdbc:postgresql://tracker_test_db:5433/itrum_tracker_java_test
+      - SPRING_DATASOURCE_FOR_TEST_USERNAME=itrumadmin
+      - SPRING_DATASOURCE_FOR_TEST_PASSWORD=aboba
+
+      - SPRING_RABBITMQ_HOST=rabbitmq
+
+      - JWT_TOKEN_SECRET=jwtapp
+      - JWT_TOKEN_EXPIRED=3600000000
+    depends_on:
+      - email-sender
+      - rabbitmq
+      - tracker_db
+
 networks:
   rabbitmq_net:
     driver: bridge
+
+

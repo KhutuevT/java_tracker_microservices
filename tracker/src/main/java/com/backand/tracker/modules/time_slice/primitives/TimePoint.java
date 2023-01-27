@@ -1,12 +1,15 @@
 package com.backand.tracker.modules.time_slice.primitives;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import java.util.Date;
 
 @Embeddable
-@Data
+@Getter
+@Setter
 public class TimePoint {
     Date timePoint;
 

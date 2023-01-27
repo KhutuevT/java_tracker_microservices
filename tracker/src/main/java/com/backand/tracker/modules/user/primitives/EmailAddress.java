@@ -2,6 +2,8 @@ package com.backand.tracker.modules.user.primitives;
 
 import com.backand.tracker.exceptions.EmailValidationFailException;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Embeddable;
@@ -9,7 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Embeddable
-@Data
+@Getter
+@Setter
 public class EmailAddress {
 
     private String emailAddress;
