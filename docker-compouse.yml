@@ -33,16 +33,17 @@ services:
     networks:
       - rabbitmq_net
 
-  email-sender:
-    build: email-sender1/
+  email-service:
+    build: email-service/email-service-server
     ports:
       - "8085:8085"
     environment:
-      - SPRING_MAIL_HOST=aboba
-      - SPRING_MAIL_PORT=aboba
-      - SPRING_MAIL_PROTOCOL=aboba
-      - SPRING_MAIL_USERNAME=aboba
-      - SPRING_MAIL_PASSWORD=aboba
+      - SPRING_MAIL_HOST=
+      - SPRING_MAIL_PORT=
+      - SPRING_MAIL_PROTOCOL=
+      - SPRING_MAIL_USERNAME=
+      - SPRING_MAIL_PASSWORD=
+      - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
       - rabbitmq
 
@@ -65,7 +66,7 @@ services:
       - JWT_TOKEN_SECRET=jwtapp
       - JWT_TOKEN_EXPIRED=3600000000
     depends_on:
-      - email-sender
+      - email-service
       - rabbitmq
       - tracker_db
 
