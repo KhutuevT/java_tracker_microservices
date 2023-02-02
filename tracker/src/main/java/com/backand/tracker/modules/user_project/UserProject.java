@@ -7,7 +7,7 @@ import com.backand.tracker.modules.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Описывает проекты юзера

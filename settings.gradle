@@ -1,4 +1,9 @@
 rootProject.name = 'tracker-microservices'
 
-include 'tracker', 'email-service:email-service-client', 'email-service:email-service-server'
+include 'tracker',
+        'email-service:email-service-client',
+        'email-service:email-service-server',
+        'report-service:report-service-client',
+        'report-service:report-service-server'
+
 

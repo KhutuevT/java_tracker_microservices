@@ -12,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -37,19 +39,16 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(LOGIN_ENDPOINT, REGISTER_ENDPOINT,
-                        "/",
+                .requestMatchers(OPTIONS).permitAll()
+                .requestMatchers(
+                        LOGIN_ENDPOINT,
+                        REGISTER_ENDPOINT,
                         "/csrf",
-                        "/v2/api-docs",
-                        "/swagger-resources/configuration/ui",
-                        "/configuration/ui",
-                        "/swagger-resources",
-                        "/swagger-resources/configuration/security",
-                        "/configuration/security",
+                        "/static/**",
                         "/swagger-ui.html",
-                        "/webjars/**",
                         "/swagger-ui/**",
-                        "/static/**").permitAll()
+                        "/v3/api-docs/**"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())

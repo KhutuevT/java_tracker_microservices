@@ -16,7 +16,7 @@ public class RabbitMQConfig {
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory("localhost"); //TODO потом переделать, что бы всё запускалось в докере
+        return new CachingConnectionFactory(); //TODO потом переделать, что бы всё запускалось в докере
     }
 
     @Bean

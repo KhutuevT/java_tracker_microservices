@@ -29,16 +29,16 @@ public class AuthRestControllerV1 {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthReqDto reqDto) {
-        MailParams message = new MailParams("text", "text", "Text");
-        template.convertAndSend("emailQueue", message);
+//        MailParams message = new MailParams("text", "text", "Text");
+//        template.convertAndSend("emailQueue", message);
         String token = authService.authorization(reqDto.getUsername(), reqDto.getPassword());
         return new ResponseEntity(token, HttpStatus.OK);
     }
 
     @PostMapping("/register")
     public ResponseEntity signup(@RequestBody RegistrationReqDto reqDto) {
-        MailParams message = new MailParams("text", "text", "Text");
-        template.convertAndSend("emailQueue", message);
+//        MailParams message = new MailParams("text", "text", "Text");
+//        template.convertAndSend("emailQueue", message);
         EmailAddress emailAddress = new EmailAddress(reqDto.getEmail());
         Password password = new Password(reqDto.getPassword());
         User user = new User.Builder(reqDto.getUsername(), emailAddress, password).build();

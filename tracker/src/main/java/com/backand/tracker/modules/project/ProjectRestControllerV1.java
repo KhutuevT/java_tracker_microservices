@@ -5,6 +5,8 @@ import com.backand.tracker.modules.project.dto.res.ProjectDto;
 import com.backand.tracker.modules.project.service.ProjectService;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.user.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -37,9 +39,12 @@ public class ProjectRestControllerV1 {
         this.userService = userService;
     }
 
+    @Operation(summary = "Возвращает проект по projectId")
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDto> getById(
-            @PathVariable Long projectId,
+            @Parameter(description = "id проекта")
+            @PathVariable
+            Long projectId,
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
@@ -50,10 +55,14 @@ public class ProjectRestControllerV1 {
         return new ResponseEntity<ProjectDto>(project, HttpStatus.OK);
     }
 
+    @Operation(summary = "Создаёт новый проект")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createNewProject(
-            @RequestPart CreateProjectReqDto reqDto,
-            @RequestPart MultipartFile avatarImage,
+            @RequestPart
+            CreateProjectReqDto reqDto,
+            @Parameter(description = "Изображение (аватарка) проекта")
+            @RequestPart
+            MultipartFile avatarImage,
             Principal principal
     ) throws IOException {
         User user = userService.getUserByUsername(principal.getName());
@@ -61,6 +70,7 @@ public class ProjectRestControllerV1 {
 
         project = new Project.Builder(reqDto.getName(), user)
                 .descriptions(reqDto.getDescriptions())
+                .image("dsfdsf")
                 .build();
 
         if (avatarImage != null) {

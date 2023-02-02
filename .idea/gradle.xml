@@ -12,20 +12,19 @@
             <option value="$PROJECT_DIR$/email-service" />
             <option value="$PROJECT_DIR$/email-service/email-service-client" />
             <option value="$PROJECT_DIR$/email-service/email-service-server" />
+            <option value="$PROJECT_DIR$/report-service" />
+            <option value="$PROJECT_DIR$/report-service/report-service-client" />
+            <option value="$PROJECT_DIR$/report-service/report-service-server" />
             <option value="$PROJECT_DIR$/tracker" />
           </set>
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/email-service/email-service-server" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/report-service/report-service-server" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/email-service" />
-            <option value="$PROJECT_DIR$/email-service/email-service-client" />
-            <option value="$PROJECT_DIR$/email-service/email-service-server" />
-            <option value="$PROJECT_DIR$/tracker" />
+            <option value="$PROJECT_DIR$/report-service/report-service-server" />
           </set>
         </option>
       </GradleProjectSettings>
