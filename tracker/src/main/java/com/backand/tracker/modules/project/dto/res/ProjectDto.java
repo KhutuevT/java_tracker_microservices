@@ -19,6 +19,7 @@ public class ProjectDto extends AbstractDto {
     private String name;
     private String descriptions;
     private Long creatorId;
+    private String image;
     private Collection<TaskDto> tasks;
     private Collection<UserProjectDto> userProjects;
     private Collection<ProjectRoleDto> projectRoles;

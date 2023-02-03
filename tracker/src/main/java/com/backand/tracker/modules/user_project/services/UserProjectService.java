@@ -9,4 +9,14 @@ public interface UserProjectService {
     UserProject createNewUserProject(User user, Project project, ProjectRole projectRole);
 
     UserProject deleteUserProject(User user, Project project);
+
+    /**
+     * Добавить работника в проект.
+     */
+    void addEmployeeInProject(User user, Long projectId, Long employeeUserId);
+
+    /**
+     * Удалить работника из проекта.
+     */
+    void deleteEmployeeInProject(User user, Long projectId, Long employeeUserId);
 }

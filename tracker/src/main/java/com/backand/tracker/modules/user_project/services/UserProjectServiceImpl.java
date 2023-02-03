@@ -28,4 +28,46 @@ public class UserProjectServiceImpl implements UserProjectService {
     public UserProject deleteUserProject(User user, Project project) {
         return null;
     }
+
+    @Override
+    public void addEmployeeInProject(User user, Long projectId, Long employeeUserId) {
+
+    }
+
+    @Override
+    public void deleteEmployeeInProject(User user, Long projectId, Long employeeUserId) {
+
+    }
+
+
+//    @Override
+//    public void addEmployeeInProject(
+//            User user,
+//            Long projectId,
+//            Long employeeUserId
+//    ) {
+//        User employee = userService.getUser(employeeUserId);
+//
+//        Project project = getById(projectId);
+//
+//        ProjectRole onlyReadRole = projectRoleService
+//                .getByName(user, String.valueOf(ProjectPermissionsEnum.READ));
+//
+//        userProjectService
+//                .createNewUserProject(employee, project, onlyReadRole);
+//    }
+//
+//    @Override
+//    public void deleteEmployeeInProject(
+//            User user,
+//            Long projectId,
+//            Long employeeUserId
+//    ) {
+//        User employee = userService.getUser(employeeUserId);
+//
+//        Project project = getById(projectId);
+//
+//        userProjectService
+//                .deleteUserProject(employee, project);
+//    }
 }

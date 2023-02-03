@@ -1,32 +1,46 @@
 package com.backand.tracker.modules.time_slice;
 
+import com.backand.tracker.modules.project.Project;
+import com.backand.tracker.modules.project.service.ProjectService;
+import com.backand.tracker.modules.project_role_permission.ProjectPermissionsEnum;
+import com.backand.tracker.modules.task.Task;
+import com.backand.tracker.modules.task.services.TaskService;
+import com.backand.tracker.modules.task_role_permission.TaskPermissionsEnum;
 import com.backand.tracker.modules.time_slice.services.TimeSliceService;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.time_slice.dto.req.TimeSliceStartReqDto;
-import com.backand.tracker.modules.user.UserRepository;
+import com.backand.tracker.modules.user.services.UserService;
+import com.backand.tracker.utils.UserPermissionsCheck;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/projects/{projectId}/tasks/{taskId}/time-slice")
 public class TimeSliceRestControllerV1 {
 
     private TimeSliceService timeSliceService;
-    private UserRepository userRepository;
-
+    private UserService userService;
+    private TaskService taskService;
+    private ProjectService projectService;
     @Autowired
     public TimeSliceRestControllerV1(
             TimeSliceService timeSliceService,
-            UserRepository userRepository
-    ) {
+            ProjectService projectService,
+            TaskService taskService,
+            UserService userService) {
         this.timeSliceService = timeSliceService;
-        this.userRepository = userRepository;
+        this.taskService = taskService;
+        this.projectService = projectService;
+        this.userService = userService;
     }
 
+    @Operation(summary = "Возвращает все time-slice таски")
     @GetMapping
     public ResponseEntity getAll(
             @PathVariable
@@ -35,11 +49,16 @@ public class TimeSliceRestControllerV1 {
             Long taskId,
             Principal principal
     ) {
-        User user = userRepository.findByUsername(
-                principal.getName()).get();
-        return null;
+        User user = userService.getUserByUsername(principal.getName());
+        Project project = projectService.getById(projectId);
+
+        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
+
+        List<TimeSlice> timeSliceList = timeSliceService.getTaskTimeSlices(taskId);
+        return new ResponseEntity(timeSliceList, HttpStatus.OK);
     }
 
+    @Operation(summary = "Возвращает time-slice по id")
     @GetMapping("/{timeSliceId}")
     public ResponseEntity getById(
             @PathVariable
@@ -50,15 +69,17 @@ public class TimeSliceRestControllerV1 {
             Long timeSliceId,
             Principal principal
     ) {
-        User user = userRepository.findByUsername(
-                principal.getName()).get();
-        TimeSlice timeSlice = timeSliceService.getById(
-                timeSliceId);
-        return new ResponseEntity(timeSlice,
-                                  HttpStatus.OK
-        );
+        User user = userService.getUserByUsername(principal.getName());
+        Project project = projectService.getById(projectId);
+
+        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
+
+        TimeSlice timeSlice = timeSliceService.getById(timeSliceId);
+
+        return new ResponseEntity(timeSlice, HttpStatus.OK);
     }
 
+    @Operation(summary = "Начинает трекать время")
     @PostMapping("/start")
     ResponseEntity start(
             @PathVariable
@@ -69,20 +90,20 @@ public class TimeSliceRestControllerV1 {
             TimeSliceStartReqDto reqDto,
             Principal principal
     ) {
-        User user = userRepository.findByUsername(
-                principal.getName()).get();
-        TimeSlice timeSlice = timeSliceService
-                .start(user,
-                       projectId,
-                       taskId,
-                       reqDto.getName()
-                );
+        User user = userService.getUserByUsername(principal.getName());
+        Project project = projectService.getById(projectId);
+        Task task = taskService.getTaskById(taskId);
 
-        return new ResponseEntity(timeSlice,
-                                  HttpStatus.OK
-        );
+        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
+        UserPermissionsCheck.checkUserPermissionInTaskWithException(user, task, TaskPermissionsEnum.CREATE);
+
+        TimeSlice timeSlice = timeSliceService
+                .start(user, projectId, taskId, reqDto.getName());
+
+        return new ResponseEntity(timeSlice, HttpStatus.OK);
     }
 
+    @Operation(summary = "Останавливает трекание времени")
     @PostMapping("/stop")
     ResponseEntity stop(
             @PathVariable
@@ -91,15 +112,16 @@ public class TimeSliceRestControllerV1 {
             Long taskId,
             Principal principal
     ) {
-        User user = userRepository.findByUsername(
-                principal.getName()).get();
-        TimeSlice timeSlice = timeSliceService.stop(
-                user,
-                projectId,
-                taskId
-        );
-        return new ResponseEntity(timeSlice,
-                                  HttpStatus.OK
-        );
+        User user = userService.getUserByUsername(principal.getName());
+        Project project = projectService.getById(projectId);
+        Task task = taskService.getTaskById(taskId);
+
+        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
+        UserPermissionsCheck.checkUserPermissionInTaskWithException(user, task, TaskPermissionsEnum.CREATE);
+
+        TimeSlice timeSlice = timeSliceService
+                .stop(user, projectId, taskId);
+
+        return new ResponseEntity(timeSlice, HttpStatus.OK);
     }
 }
