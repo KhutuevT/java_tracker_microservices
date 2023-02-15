@@ -35,7 +35,7 @@ public class ProjectRoleRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Collection<ProjectRole> projectRole = projectRoleService.getAllByProject(user, projectId);
+        Collection<ProjectRole> projectRole = projectRoleService.getAllByProjectId(projectId);
         return new ResponseEntity(projectRole, HttpStatus.OK);
     }
 

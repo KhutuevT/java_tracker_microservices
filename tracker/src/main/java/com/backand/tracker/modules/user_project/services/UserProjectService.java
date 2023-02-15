@@ -6,6 +6,7 @@ import com.backand.tracker.modules.user_project.UserProject;
 import com.backand.tracker.modules.user.User;
 
 public interface UserProjectService {
+    UserProject getByProjectIdAndUserId(Long projectId, Long userId);
     UserProject createNewUserProject(User user, Project project, ProjectRole projectRole);
 
     UserProject deleteUserProject(User user, Project project);

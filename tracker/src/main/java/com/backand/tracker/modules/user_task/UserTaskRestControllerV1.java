@@ -2,16 +2,14 @@ package com.backand.tracker.modules.user_task;
 
 import com.backand.tracker.modules.project.Project;
 import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.project_role_permission.ProjectPermissionsEnum;
+import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.task.Task;
-import com.backand.tracker.modules.task.TaskMapper;
 import com.backand.tracker.modules.task.services.TaskService;
-import com.backand.tracker.modules.task_role_permission.TaskPermissionsEnum;
+import com.backand.tracker.modules.task_role_permission.TaskPermission;
 import com.backand.tracker.modules.user.services.UserService;
 import com.backand.tracker.modules.user_task.dto.res.UserTaskDto;
 import com.backand.tracker.modules.user_task.services.UserTaskService;
 import com.backand.tracker.modules.user.User;
-import com.backand.tracker.modules.user.UserRepository;
 import com.backand.tracker.utils.UserPermissionsCheck;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +53,8 @@ public class UserTaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
 
         List<UserTask> userTaskList = userTaskService.getAllUserTaskByTaskId(taskId);
         List<UserTaskDto> userTaskDtos = userTaskList.stream().map(userTaskMapper::toDto).toList();
@@ -75,10 +71,8 @@ public class UserTaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
 
         UserTask userTask = userTaskService.getUserTaskById(userTaskId);
         UserTaskDto userTaskDto = userTaskMapper.toDto(userTask);
@@ -95,11 +89,8 @@ public class UserTaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
-        UserPermissionsCheck.checkUserPermissionInTaskWithException(user, task, TaskPermissionsEnum.ADD_USER);
 
         userTaskService.addTaskExecutor(user, taskId, projectId, taskExecutorId);
 
@@ -115,11 +106,8 @@ public class UserTaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
-        UserPermissionsCheck.checkUserPermissionInTaskWithException(user, task, TaskPermissionsEnum.ADD_USER);
 
         userTaskService.deleteTaskExecutor(user, taskId, projectId, taskExecutorId);
 

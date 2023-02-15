@@ -13,21 +13,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomAuthenticationManager implements AuthenticationManager {
 
-    private JwtUserDetailsService jwtUserDetailsService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     public CustomAuthenticationManager(
-            JwtUserDetailsService jwtUserDetailsService,
+            UserDetailsServiceImpl userDetailsServiceImpl,
             PasswordEncoder passwordEncoder
     ) {
-        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        final UserDetails userDetail = jwtUserDetailsService.loadUserByUsername(authentication.getName());
+        final UserDetails userDetail = userDetailsServiceImpl.loadUserByUsername(authentication.getName());
         if (!passwordEncoder.matches(authentication.getCredentials().toString(), userDetail.getPassword())) {
             throw new BadCredentialsException("Wrong password");
         }

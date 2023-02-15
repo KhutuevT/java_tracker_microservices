@@ -2,10 +2,10 @@ package com.backand.tracker.modules.time_slice;
 
 import com.backand.tracker.modules.project.Project;
 import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.project_role_permission.ProjectPermissionsEnum;
+import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.task.Task;
 import com.backand.tracker.modules.task.services.TaskService;
-import com.backand.tracker.modules.task_role_permission.TaskPermissionsEnum;
+import com.backand.tracker.modules.task_role_permission.TaskPermission;
 import com.backand.tracker.modules.time_slice.services.TimeSliceService;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.time_slice.dto.req.TimeSliceStartReqDto;
@@ -50,9 +50,7 @@ public class TimeSliceRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
+        Project project = projectService.getProjectById(projectId);
 
         List<TimeSlice> timeSliceList = timeSliceService.getTaskTimeSlices(taskId);
         return new ResponseEntity(timeSliceList, HttpStatus.OK);
@@ -70,9 +68,7 @@ public class TimeSliceRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
+        Project project = projectService.getProjectById(projectId);
 
         TimeSlice timeSlice = timeSliceService.getById(timeSliceId);
 
@@ -91,11 +87,8 @@ public class TimeSliceRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
-        UserPermissionsCheck.checkUserPermissionInTaskWithException(user, task, TaskPermissionsEnum.CREATE);
 
         TimeSlice timeSlice = timeSliceService
                 .start(user, projectId, taskId, reqDto.getName());
@@ -113,11 +106,8 @@ public class TimeSliceRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
-        UserPermissionsCheck.checkUserPermissionInTaskWithException(user, task, TaskPermissionsEnum.CREATE);
 
         TimeSlice timeSlice = timeSliceService
                 .stop(user, projectId, taskId);

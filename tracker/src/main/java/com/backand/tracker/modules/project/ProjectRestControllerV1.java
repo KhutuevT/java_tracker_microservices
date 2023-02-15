@@ -1,13 +1,12 @@
 package com.backand.tracker.modules.project;
 
 import com.backand.tracker.modules.project.dto.req.CreateProjectReqDto;
-import com.backand.tracker.modules.project.dto.req.UpdateProjectDto;
+import com.backand.tracker.modules.project.dto.req.UpdateProjectReqDto;
 import com.backand.tracker.modules.project.dto.res.ProjectDto;
 import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.project_role_permission.ProjectPermissionsEnum;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.user.services.UserService;
-import com.backand.tracker.utils.UserPermissionsCheck;
+import com.backand.tracker.annotations.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -46,21 +44,22 @@ public class ProjectRestControllerV1 {
         this.projectMapper = projectMapper;
     }
 
+
     @Operation(summary = "Возвращает проект по projectId")
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDto> getById(
             @Parameter(description = "id проекта")
             @PathVariable
             Long projectId,
-            Principal principal
+            @CurrentUser
+            User user
     ) {
-        User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
-
-        ProjectDto projectDto = projectMapper.toDto(project);
-        return new ResponseEntity<ProjectDto>(projectDto, HttpStatus.OK);
+        Project project = projectService.getProjectById(projectId);
+        System.out.println(user);
+        ProjectDto projectDto = projectService.getProjectDtoById(projectId, user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(projectDto);
     }
 
     @Operation(summary = "Создаёт новый проект")
@@ -72,15 +71,10 @@ public class ProjectRestControllerV1 {
             @Parameter(description = "Изображение (аватарка) проекта")
             @RequestPart
             MultipartFile avatarImage,
-            Principal principal
+            @CurrentUser User user
     ) throws IOException {
-        User user = userService.getUserByUsername(principal.getName());
-        Project project = null;
-
-        project = new Project.Builder(reqDto.getName(), user)
-                .descriptions(reqDto.getDescriptions())
-                .build();
-
+        ProjectDto saveProjectDto = projectService.createNewProject(reqDto, user);
+        String avatarFileName = "default.png";
         if (avatarImage != null) {
             File uploadDir = new File(uploadPath);
 
@@ -89,35 +83,24 @@ public class ProjectRestControllerV1 {
             }
 
             String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + avatarImage.getOriginalFilename();
-            avatarImage.transferTo(new File(uploadPath + "/" + resultFileName));
+            avatarFileName = uuidFile + "." + avatarImage.getOriginalFilename();
+            avatarImage.transferTo(new File(uploadPath + "/" + avatarFileName));
 
-            project = new Project.Builder(reqDto.getName(), user)
-                    .descriptions(reqDto.getDescriptions())
-                    .image(resultFileName)
-                    .build();
         }
-
-        Project savedProject = projectService
-                .createNewProject(project);
-
-        ProjectDto saveProjectDto = projectMapper.toDto(savedProject);
-        return new ResponseEntity<>(saveProjectDto, HttpStatus.OK);
+        ProjectDto resultProjectDto = projectService.updateProjectAvatar(saveProjectDto.getId(), user, avatarFileName);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(resultProjectDto);
     }
 
     @Operation(summary = "Удаляет проект")
     @DeleteMapping("/{projectId}")
     public ResponseEntity deleteProject(
             @PathVariable Long projectId,
-            Principal principal
+            @CurrentUser User user
             ) {
-        User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.DELETE);
-
+        Project project = projectService.getProjectById(projectId);
         projectService.deleteProject(projectId);
-
         return new ResponseEntity("OK", HttpStatus.OK);
     }
 
@@ -125,16 +108,12 @@ public class ProjectRestControllerV1 {
     @PatchMapping("/{projectId}")
     public ResponseEntity<ProjectDto> updateProject(
             @PathVariable Long projectId,
-            @RequestBody UpdateProjectDto updateProjectDto,
-            Principal principal
+            @RequestBody UpdateProjectReqDto updateProjectDto,
+            @CurrentUser User user
     ) {
-        User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
+        ProjectDto projectDto = projectService.updateProject(projectId, updateProjectDto, user);
 
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.UPDATE);
-
-        //TODO
-
-        return new ResponseEntity("OK", HttpStatus.OK);
+        return new ResponseEntity(projectDto, HttpStatus.OK);
     }
 }

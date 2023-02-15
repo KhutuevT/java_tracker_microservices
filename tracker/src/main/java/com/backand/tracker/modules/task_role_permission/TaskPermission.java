@@ -1,6 +1,6 @@
 package com.backand.tracker.modules.task_role_permission;
 
-public enum TaskPermissionsEnum {
+public enum TaskPermission {
     READ,
     CREATE,
     UPDATE,

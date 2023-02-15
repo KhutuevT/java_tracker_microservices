@@ -1,53 +1,59 @@
 package com.backand.tracker.utils;
 
-import com.backand.tracker.modules.project.Project;
-import com.backand.tracker.modules.project_role_permission.ProjectPermissionsEnum;
+import com.backand.tracker.modules.project_role.ProjectRole;
+import com.backand.tracker.modules.project_role.services.ProjectRoleService;
+import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.project_role_permission.ProjectRolePermissions;
-import com.backand.tracker.modules.user_project.UserProject;
 import com.backand.tracker.modules.task.Task;
-import com.backand.tracker.modules.task_role_permission.TaskPermissionsEnum;
+import com.backand.tracker.modules.task_role_permission.TaskPermission;
 import com.backand.tracker.modules.task_role_permission.TaskRolePermissions;
+import com.backand.tracker.modules.user_project.UserProject;
+import com.backand.tracker.modules.user_project.services.UserProjectService;
 import com.backand.tracker.modules.user_task.UserTask;
 import com.backand.tracker.modules.user.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
+@Service
 public class UserPermissionsCheck {
-    public static boolean checkUserPermissionsInProject(
-            User user,
-            Project project,
-            ProjectPermissionsEnum projectPermission
+
+    private static ProjectRoleService projectRoleService;
+    private static UserProjectService userProjectService;
+
+    @Autowired
+    public UserPermissionsCheck(
+            ProjectRoleService projectRoleService,
+            UserProjectService userProjectService
     ) {
-        boolean userIsCreator = Objects.equals(project.getCreator().getId(), user.getId());
-        //Если пользователь создатель проекта - то у него есть все права
-        if (userIsCreator) {
-            return true;
-        }
+        this.projectRoleService = projectRoleService;
+        this.userProjectService = userProjectService;
+    }
 
-        Collection<UserProject> userProjects = project.getUserProjects();
-
-        for (UserProject userProject : userProjects) {
-            if (Objects.equals(userProject.getUser().getId(), user.getId())) {
-                Collection<ProjectRolePermissions> projectRolePermissions =
-                        userProject.getProjectRole().getProjectRolePermissions();
-
-                for (ProjectRolePermissions projectRolePermission : projectRolePermissions) {
-                    if (projectRolePermission.getProjectPermission() == projectPermission) {
-                        return true;
-                    }
-                }
-                return false;
+    public static boolean inProject(
+            User user,
+            Long projectId,
+            ProjectPermission projectPermission
+    ) {
+        UserProject userProject = userProjectService.getByProjectIdAndUserId(projectId, user.getId());
+        for (ProjectRolePermissions projectRolePermission : userProject.getProjectRole().getProjectRolePermissions()){
+            if(projectRolePermission.getProjectPermission() == projectPermission){
+                return true;
             }
         }
         return false;
     }
 
-    public static boolean checkUserPermissionInTask(
+    public static boolean inTask(
             User user,
             Task task,
-            TaskPermissionsEnum taskPermission
+            TaskPermission taskPermission
     ) {
         boolean userIsCreator = Objects.equals(task.getCreator().getId(), user.getId());
 
@@ -73,22 +79,22 @@ public class UserPermissionsCheck {
         return false;
     }
 
-    public static void checkUserPermissionInProjectWithException(
+    public static void inProjectWithException(
             User user,
-            Project project,
-            ProjectPermissionsEnum projectPermission
+            Long projectId,
+            ProjectPermission projectPermission
     ) {
-        if (!checkUserPermissionsInProject(user, project, projectPermission)) {
+        if (!inProject(user, projectId, projectPermission)) {
             throw new AccessDeniedException("Access denied!");
         }
     }
 
-    public static void checkUserPermissionInTaskWithException(
+    public static void inTaskWithException(
             User user,
             Task task,
-            TaskPermissionsEnum taskPermission
+            TaskPermission taskPermission
     ) {
-        if (!checkUserPermissionInTask(user, task, taskPermission)) {
+        if (!inTask(user, task, taskPermission)) {
             throw new AccessDeniedException("Access denied!");
         }
     }

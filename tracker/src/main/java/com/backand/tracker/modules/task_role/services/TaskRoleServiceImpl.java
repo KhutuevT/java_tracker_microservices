@@ -4,10 +4,9 @@ import com.backand.tracker.modules.task_role.TaskRole;
 import com.backand.tracker.modules.task_role.TaskRoleRepository;
 import com.backand.tracker.modules.task.services.TaskService;
 import com.backand.tracker.modules.task.Task;
-import com.backand.tracker.modules.task_role_permission.TaskPermissionsEnum;
+import com.backand.tracker.modules.task_role_permission.TaskPermission;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.task_role.services.TaskRoleService;
 import com.backand.tracker.utils.UserPermissionsCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,10 +41,7 @@ public class TaskRoleServiceImpl implements TaskRoleService {
     ) {
         Task task = taskService.getTaskById(taskId);
 
-        UserPermissionsCheck
-                .checkUserPermissionInTaskWithException(
-                        creator, task, TaskPermissionsEnum.CREATE_ROLE
-                );
+        UserPermissionsCheck.inTaskWithException(creator, task, TaskPermission.CREATE_ROLE);
         TaskRole taskRole = new TaskRole(name, creator, task);
 
         return taskRoleRepository.save(taskRole);
@@ -61,10 +57,7 @@ public class TaskRoleServiceImpl implements TaskRoleService {
     ) {
         Task task = taskService.getTaskById(taskId);
 
-        UserPermissionsCheck
-                .checkUserPermissionInTaskWithException(
-                        user, task, TaskPermissionsEnum.DELETE_ROLE
-                );
+        UserPermissionsCheck.inTaskWithException(user, task, TaskPermission.DELETE_ROLE);
         taskRoleRepository.deleteById(taskRoleId);
     }
 

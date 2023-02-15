@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class UpdateProjectDto {
+public class UpdateProjectReqDto {
 
     @NotNull
     private String name;

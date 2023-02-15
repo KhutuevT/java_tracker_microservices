@@ -8,11 +8,11 @@ import java.util.Collection;
 public interface ProjectRoleService {
     ProjectRole createNew(String name, User creator, Long projectId);
 
-    void delete(User user, Long id, Long projectId);
+    void delete(Long id, Long projectId);
 
-    Collection<ProjectRole> getAllByProject(User user, Long projectId);
+    Collection<ProjectRole> getAllByProjectId(Long projectId);
 
-    ProjectRole getById(User user, Long id, Long projectId);
+    ProjectRole getById(Long id, Long projectId);
 
-    ProjectRole getByName(User user, String name);
+    ProjectRole getByName(String name);
 }

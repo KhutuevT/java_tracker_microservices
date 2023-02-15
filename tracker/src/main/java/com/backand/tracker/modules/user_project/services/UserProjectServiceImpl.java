@@ -20,6 +20,11 @@ public class UserProjectServiceImpl implements UserProjectService {
     }
 
     @Override
+    public UserProject getByProjectIdAndUserId(Long projectId, Long userId) {
+        return userProjectRepository.findUserProjectByProjectIdAndUserId(projectId, userId);
+    }
+
+    @Override
     public UserProject createNewUserProject(User user, Project project, ProjectRole projectRole) {
         return null;
     }

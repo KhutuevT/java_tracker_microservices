@@ -1,6 +1,6 @@
 package com.backand.tracker.modules.project_role_permission;
 
-public enum ProjectPermissionsEnum {
+public enum ProjectPermission {
     READ,
     DELETE,
     UPDATE,
@@ -9,4 +9,5 @@ public enum ProjectPermissionsEnum {
     CREATE_ROLE,
     DELETE_ROLE,
     CREATE_TASK,
+    ADMIN,
 }

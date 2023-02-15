@@ -41,7 +41,7 @@ public class AuthRestControllerV1 {
 //        template.convertAndSend("emailQueue", message);
         EmailAddress emailAddress = new EmailAddress(reqDto.getEmail());
         Password password = new Password(reqDto.getPassword());
-        User user = new User.Builder(reqDto.getUsername(), emailAddress, password).build();
+        User user = new User.Builder(reqDto.getUsername(), emailAddress, password.getPassword()).build();
 
         authService.registration(user);
         return new ResponseEntity("OK", HttpStatus.OK);

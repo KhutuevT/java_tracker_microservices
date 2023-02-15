@@ -18,7 +18,7 @@ public class ProjectRolePermissions extends AbstractBaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "permission")
-    private ProjectPermissionsEnum projectPermission;
+    private ProjectPermission projectPermission;
 
     @Deprecated
     public ProjectRolePermissions() {
@@ -26,7 +26,7 @@ public class ProjectRolePermissions extends AbstractBaseEntity {
 
     public ProjectRolePermissions(
             ProjectRole projectRole,
-            ProjectPermissionsEnum projectPermission
+            ProjectPermission projectPermission
     ) {
         this.projectRole = projectRole;
         this.projectPermission = projectPermission;

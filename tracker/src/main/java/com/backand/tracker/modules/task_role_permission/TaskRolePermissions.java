@@ -18,5 +18,5 @@ public class TaskRolePermissions extends AbstractBaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "permission")
-    private TaskPermissionsEnum taskPermissions;
+    private TaskPermission taskPermissions;
 }

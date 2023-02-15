@@ -10,12 +10,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
 
     @Autowired
-    public JwtUserDetailsService(@Lazy UserService userService) {
+    public UserDetailsServiceImpl(@Lazy UserService userService) {
         this.userService = userService;
     }
     @Override
@@ -26,7 +26,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
 
         User user = userService.getUserByUsername(username);
-        JwtUser jwtUser = JwtUserFactory.create(user);
-        return jwtUser;
+        return user;
     }
 }

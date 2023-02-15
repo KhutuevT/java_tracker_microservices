@@ -2,11 +2,11 @@ package com.backand.tracker.modules.task;
 
 import com.backand.tracker.modules.project.Project;
 import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.project_role_permission.ProjectPermissionsEnum;
+import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.task.dto.req.CreateTaskReqDto;
 import com.backand.tracker.modules.task.dto.res.TaskDto;
 import com.backand.tracker.modules.task.services.TaskService;
-import com.backand.tracker.modules.task_role_permission.TaskPermissionsEnum;
+import com.backand.tracker.modules.task_role_permission.TaskPermission;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.user.services.UserService;
 import com.backand.tracker.utils.UserPermissionsCheck;
@@ -51,10 +51,8 @@ public class TaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
 
         TaskDto taskDto = taskMapper.toDto(task);
         return new ResponseEntity<>(taskDto, HttpStatus.OK);
@@ -68,9 +66,7 @@ public class TaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
+        Project project = projectService.getProjectById(projectId);
 
         List<Task> tasks = taskService.getAllTaskByProjectId(projectId);
 
@@ -89,9 +85,7 @@ public class TaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.CREATE_TASK);
+        Project project = projectService.getProjectById(projectId);
 
         Task task = taskService
                 .createNewTask(
@@ -113,11 +107,10 @@ public class TaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
 
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
-        UserPermissionsCheck.checkUserPermissionInTaskWithException(user, task, TaskPermissionsEnum.DELETE);
+        UserPermissionsCheck.inTaskWithException(user, task, TaskPermission.DELETE);
 
         taskService.deleteTask(taskId);
 
@@ -173,11 +166,10 @@ public class TaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
+        Project project = projectService.getProjectById(projectId);
         Task task = taskService.getTaskById(taskId);
 
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.READ);
-        UserPermissionsCheck.checkUserPermissionInTaskWithException(user, task, TaskPermissionsEnum.UPDATE);
+        UserPermissionsCheck.inTaskWithException(user, task, TaskPermission.UPDATE);
 
         //TODO
 

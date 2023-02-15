@@ -2,8 +2,7 @@ package com.backand.tracker.modules.user_project;
 
 import com.backand.tracker.modules.project.Project;
 import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.project_role_permission.ProjectPermissionsEnum;
-import com.backand.tracker.modules.user.UserRepository;
+import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.user.services.UserService;
 import com.backand.tracker.modules.user_project.services.UserProjectService;
@@ -68,9 +67,7 @@ public class UserProjectRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.ADD_USER);
+        Project project = projectService.getProjectById(projectId);
 
         userProjectService.addEmployeeInProject(user, projectId, employeeUserId);
 
@@ -85,9 +82,7 @@ public class UserProjectRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getById(projectId);
-
-        UserPermissionsCheck.checkUserPermissionInProjectWithException(user, project, ProjectPermissionsEnum.DELETE_USER);
+        Project project = projectService.getProjectById(projectId);
 
         userProjectService.deleteEmployeeInProject(user, projectId, employeeUserId);
 

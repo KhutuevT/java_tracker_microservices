@@ -14,13 +14,16 @@ import lombok.Setter;
 import lombok.ToString;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 
 @Entity
 @Table(name = "users")
 @Setter
 @Getter
-public class User extends AbstractBaseEntity {
+public class User extends AbstractBaseEntity implements UserDetails {
     @Column(name = "username")
     private String username;
 
@@ -31,9 +34,10 @@ public class User extends AbstractBaseEntity {
     @AttributeOverride(name = "emailAddress", column = @Column(name = "email"))
     private EmailAddress emailAddress;
 
-    @Embedded
-    @AttributeOverride(name = "password", column = @Column(name = "password"))
-    private Password password;
+    //@Embedded
+    //@AttributeOverride(name = "password", column = @Column(name = "password"))
+    @Column(name="password")
+    private String password;
 
     @ToString.Exclude
     @JsonIgnore
@@ -60,13 +64,43 @@ public class User extends AbstractBaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     private Collection<TimeSlice> timeSlices;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
     public static class Builder {
         private String username;
         private EmailAddress emailAddress;
-        private Password password;
+        private String password;
         private String avatar = "default-user-avatar.png";
 
-        public Builder(String username, EmailAddress emailAddress, Password password) {
+        public Builder(String username, EmailAddress emailAddress, String password) {
             this.username = username;
             this.emailAddress = emailAddress;
             this.password = password;

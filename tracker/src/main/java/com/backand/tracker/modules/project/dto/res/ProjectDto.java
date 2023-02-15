@@ -16,6 +16,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectDto extends AbstractDto {
+    private Long id;
     private String name;
     private String descriptions;
     private Long creatorId;
