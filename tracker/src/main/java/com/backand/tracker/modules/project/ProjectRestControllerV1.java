@@ -54,9 +54,9 @@ public class ProjectRestControllerV1 {
             @CurrentUser
             User user
     ) {
-        Project project = projectService.getProjectById(projectId);
+        Project project = projectService.getById(projectId);
         System.out.println(user);
-        ProjectDto projectDto = projectService.getProjectDtoById(projectId, user);
+        ProjectDto projectDto = projectService.getDtoById(projectId, user);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(projectDto);
@@ -73,7 +73,7 @@ public class ProjectRestControllerV1 {
             MultipartFile avatarImage,
             @CurrentUser User user
     ) throws IOException {
-        ProjectDto saveProjectDto = projectService.createNewProject(reqDto, user);
+        ProjectDto saveProjectDto = projectService.createNew(reqDto, user);
         String avatarFileName = "default.png";
         if (avatarImage != null) {
             File uploadDir = new File(uploadPath);
@@ -87,7 +87,7 @@ public class ProjectRestControllerV1 {
             avatarImage.transferTo(new File(uploadPath + "/" + avatarFileName));
 
         }
-        ProjectDto resultProjectDto = projectService.updateProjectAvatar(saveProjectDto.getId(), user, avatarFileName);
+        ProjectDto resultProjectDto = projectService.updateAvatar(saveProjectDto.getId(), user, avatarFileName);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(resultProjectDto);
@@ -99,8 +99,8 @@ public class ProjectRestControllerV1 {
             @PathVariable Long projectId,
             @CurrentUser User user
             ) {
-        Project project = projectService.getProjectById(projectId);
-        projectService.deleteProject(projectId);
+        Project project = projectService.getById(projectId);
+        projectService.delete(projectId);
         return new ResponseEntity("OK", HttpStatus.OK);
     }
 
@@ -111,8 +111,8 @@ public class ProjectRestControllerV1 {
             @RequestBody UpdateProjectReqDto updateProjectDto,
             @CurrentUser User user
     ) {
-        Project project = projectService.getProjectById(projectId);
-        ProjectDto projectDto = projectService.updateProject(projectId, updateProjectDto, user);
+        Project project = projectService.getById(projectId);
+        ProjectDto projectDto = projectService.update(projectId, updateProjectDto, user);
 
         return new ResponseEntity(projectDto, HttpStatus.OK);
     }

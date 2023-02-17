@@ -2,11 +2,9 @@ package com.backand.tracker.modules.user_project;
 
 import com.backand.tracker.modules.project.Project;
 import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.user.services.UserService;
 import com.backand.tracker.modules.user_project.services.UserProjectService;
-import com.backand.tracker.utils.UserPermissionsCheck;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,7 +65,7 @@ public class UserProjectRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
+        Project project = projectService.getById(projectId);
 
         userProjectService.addEmployeeInProject(user, projectId, employeeUserId);
 
@@ -82,7 +80,7 @@ public class UserProjectRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
+        Project project = projectService.getById(projectId);
 
         userProjectService.deleteEmployeeInProject(user, projectId, employeeUserId);
 

@@ -2,15 +2,12 @@ package com.backand.tracker.modules.user_task;
 
 import com.backand.tracker.modules.project.Project;
 import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.task.Task;
 import com.backand.tracker.modules.task.services.TaskService;
-import com.backand.tracker.modules.task_role_permission.TaskPermission;
 import com.backand.tracker.modules.user.services.UserService;
 import com.backand.tracker.modules.user_task.dto.res.UserTaskDto;
 import com.backand.tracker.modules.user_task.services.UserTaskService;
 import com.backand.tracker.modules.user.User;
-import com.backand.tracker.utils.UserPermissionsCheck;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,8 +50,8 @@ public class UserTaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
-        Task task = taskService.getTaskById(taskId);
+        Project project = projectService.getById(projectId);
+        Task task = taskService.getById(taskId);
 
         List<UserTask> userTaskList = userTaskService.getAllUserTaskByTaskId(taskId);
         List<UserTaskDto> userTaskDtos = userTaskList.stream().map(userTaskMapper::toDto).toList();
@@ -71,8 +68,8 @@ public class UserTaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
-        Task task = taskService.getTaskById(taskId);
+        Project project = projectService.getById(projectId);
+        Task task = taskService.getById(taskId);
 
         UserTask userTask = userTaskService.getUserTaskById(userTaskId);
         UserTaskDto userTaskDto = userTaskMapper.toDto(userTask);
@@ -89,8 +86,8 @@ public class UserTaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
-        Task task = taskService.getTaskById(taskId);
+        Project project = projectService.getById(projectId);
+        Task task = taskService.getById(taskId);
 
         userTaskService.addTaskExecutor(user, taskId, projectId, taskExecutorId);
 
@@ -106,8 +103,8 @@ public class UserTaskRestControllerV1 {
             Principal principal
     ) {
         User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
-        Task task = taskService.getTaskById(taskId);
+        Project project = projectService.getById(projectId);
+        Task task = taskService.getById(taskId);
 
         userTaskService.deleteTaskExecutor(user, taskId, projectId, taskExecutorId);
 

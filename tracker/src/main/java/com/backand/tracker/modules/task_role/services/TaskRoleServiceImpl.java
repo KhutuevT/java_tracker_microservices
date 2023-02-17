@@ -4,10 +4,7 @@ import com.backand.tracker.modules.task_role.TaskRole;
 import com.backand.tracker.modules.task_role.TaskRoleRepository;
 import com.backand.tracker.modules.task.services.TaskService;
 import com.backand.tracker.modules.task.Task;
-import com.backand.tracker.modules.task_role_permission.TaskPermission;
 import com.backand.tracker.modules.user.User;
-import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.utils.UserPermissionsCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +13,14 @@ import java.util.Collection;
 @Service
 public class TaskRoleServiceImpl implements TaskRoleService {
 
-    private final ProjectService projectService;
     private final TaskRoleRepository taskRoleRepository;
     private final TaskService taskService;
 
     @Autowired
     public TaskRoleServiceImpl(
-            ProjectService projectService,
             TaskRoleRepository taskRoleRepository,
             TaskService taskService
     ) {
-        this.projectService = projectService;
         this.taskRoleRepository = taskRoleRepository;
         this.taskService = taskService;
     }
@@ -39,9 +33,8 @@ public class TaskRoleServiceImpl implements TaskRoleService {
             Long projectId,
             Long taskId
     ) {
-        Task task = taskService.getTaskById(taskId);
+        Task task = taskService.getById(taskId);
 
-        UserPermissionsCheck.inTaskWithException(creator, task, TaskPermission.CREATE_ROLE);
         TaskRole taskRole = new TaskRole(name, creator, task);
 
         return taskRoleRepository.save(taskRole);
@@ -55,9 +48,8 @@ public class TaskRoleServiceImpl implements TaskRoleService {
             Long projectId,
             Long taskRoleId
     ) {
-        Task task = taskService.getTaskById(taskId);
+        Task task = taskService.getById(taskId);
 
-        UserPermissionsCheck.inTaskWithException(user, task, TaskPermission.DELETE_ROLE);
         taskRoleRepository.deleteById(taskRoleId);
     }
 

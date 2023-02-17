@@ -1,5 +1,11 @@
 package com.backand.tracker.modules.time_slice.services;
 
+import com.backand.tracker.annotations.CheckProjectPermissions;
+import com.backand.tracker.annotations.CheckTaskPermissions;
+import com.backand.tracker.modules.project_role_permission.ProjectPermission;
+import com.backand.tracker.modules.task_role_permission.TaskPermission;
+import com.backand.tracker.modules.time_slice.TimeSliceMapper;
+import com.backand.tracker.modules.time_slice.dto.res.TimeSliceDto;
 import com.backand.tracker.modules.time_slice.primitives.TimePoint;
 import com.backand.tracker.modules.task.Task;
 import com.backand.tracker.modules.time_slice.TimeSlice;
@@ -16,68 +22,78 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TimeSliceServiceImpl implements
-        TimeSliceService {
+public class TimeSliceServiceImpl implements TimeSliceService {
 
-    private TimeSliceRepository timeSliceRepository;
-    private TaskService taskService;
+    private final TimeSliceRepository timeSliceRepository;
+    private final TaskService taskService;
+    private final TimeSliceMapper timeSliceMapper;
 
     @Autowired
     public TimeSliceServiceImpl(
             TimeSliceRepository timeSliceRepository,
-            TaskService taskService
-    ) {
+            TaskService taskService,
+            TimeSliceMapper timeSliceMapper) {
         this.timeSliceRepository = timeSliceRepository;
         this.taskService = taskService;
+        this.timeSliceMapper = timeSliceMapper;
     }
 
     @Override
-    public TimeSlice getById(Long id) {
-        return timeSliceRepository.findById(id)
+    public TimeSliceDto getDtoById(Long timeSliceId) {
+        return timeSliceMapper.toDto(getById(timeSliceId));
+    }
+
+    @Override
+    public TimeSlice getById(Long timeSliceId) {
+        return timeSliceRepository.findById(timeSliceId)
                 .orElseThrow(() -> new EntityNotFoundException("Time slice not found!"));
     }
 
     @Override
-    public List<TimeSlice> getTaskTimeSlices(Long taskId) {
-        return (List<TimeSlice>) timeSliceRepository
-                .findAllByTaskId(taskId);
-    }
-
-    @Override
-    public List<TimeSlice> getTaskTimeSlices(
+    public List<TimeSliceDto> getAllDtoByTaskId(
             Long taskId,
             TimePoint startDate,
             TimePoint endDate
     ) {
+        List<TimeSlice> timeSlices = getAllByTaskId(taskId, startDate, endDate);
+        return timeSlices.stream().map(timeSliceMapper::toDto).toList();
+    }
+
+    @CheckTaskPermissions(permission = TaskPermission.READ)
+    @Override
+    public List<TimeSlice> getAllByTaskId(Long taskId, TimePoint startDate, TimePoint endDate) {
+        return (List<TimeSlice>) timeSliceRepository.findAllByTaskId(taskId);
+    }
+
+    @Override
+    public List<TimeSliceDto> getAllDtoByTaskIdAndUserId(Long taskId, Long userId, TimePoint startDate, TimePoint endDate) {
+        List<TimeSlice> timeSlices = getAllByTaskIdAndUserId(taskId, userId, startDate, endDate);
+        return timeSlices.stream().map(timeSliceMapper::toDto).toList();
+    }
+
+    @CheckTaskPermissions(permission = TaskPermission.READ)
+    @Override
+    public List<TimeSlice> getAllByTaskIdAndUserId(Long taskId, Long userId, TimePoint startDate, TimePoint endDate) {
         return null;
     }
 
     @Override
-    public List<TimeSlice> getTaskTimeSlicesByUser(
-            Long taskId,
-            Long userId
-    ) {
+    public List<TimeSliceDto> getAllDtoByProjectIdAndUserId(Long projectId, Long userId, TimePoint startDate, TimePoint endDate) {
+        List<TimeSlice> timeSlices = getAllByProjectIdAndUserId(projectId, userId, startDate, endDate);
+        return timeSlices.stream().map(timeSliceMapper::toDto).toList();
+    }
+
+    @CheckProjectPermissions(permission = ProjectPermission.READ)
+    @Override
+    public List<TimeSlice> getAllByProjectIdAndUserId(Long projectId, Long userId, TimePoint startDate, TimePoint endDate) {
         return null;
     }
 
+    @CheckTaskPermissions(permission = TaskPermission.CREATE)
     @Override
-    public List<TimeSlice> getTaskTimeSlicesByUser(
-            Long taskId,
-            Long userId,
-            TimePoint startDate,
-            TimePoint endDate
-    ) {
-        return null;
-    }
-
-    @Override
-    public TimeSlice start(User user,
-                           Long projectId,
-                           Long taskId,
-                           String name
-    ) {
-        Task task = taskService.getTaskById(taskId);
-        TimeSlice lastTimeSlice = getLastTimeSliceByTask(task);
+    public TimeSliceDto start(Long taskId, User user, String name) {
+        Task task = taskService.getById(taskId);
+        TimeSlice lastTimeSlice = getLastTimeSliceByTaskId(taskId);
 
         if (lastTimeSlice != null && lastTimeSlice.getEndTimePoint() == null) {
             throw new TimeSliceAlreadyStartException("Time slice in this task already start!");
@@ -89,16 +105,13 @@ public class TimeSliceServiceImpl implements
                 task,
                 user
         );
-        return timeSliceRepository.save(timeSlice);
+        return timeSliceMapper.toDto(timeSliceRepository.save(timeSlice));
     }
 
+    @CheckTaskPermissions(permission = TaskPermission.CREATE)
     @Override
-    public TimeSlice stop(User user,
-                          Long projectId,
-                          Long taskId
-    ) {
-        Task task = taskService.getTaskById(taskId);
-        TimeSlice lastTimeSlice = getLastTimeSliceByTask(task);
+    public TimeSliceDto stop(Long taskId, User user) {
+        TimeSlice lastTimeSlice = getLastTimeSliceByTaskId(taskId);
 
         if (lastTimeSlice != null && lastTimeSlice.getEndTimePoint() != null) {
             throw new TimeSliceAlreadyStopException("Time slice in this task already stop!");
@@ -107,14 +120,12 @@ public class TimeSliceServiceImpl implements
         TimePoint timePoint = new TimePoint(new Date());
         lastTimeSlice.setEndTimePoint(timePoint);
 
-        return timeSliceRepository.save(lastTimeSlice);
+        return timeSliceMapper.toDto(timeSliceRepository.save(lastTimeSlice));
     }
 
-    private TimeSlice getLastTimeSliceByTask(Task task) {
-        TimeSlice lastTimeSlice = timeSliceRepository
-                .findFirstByTaskOrderByStartTimePointDesc(task)
-                .orElse(null);
-
-        return lastTimeSlice;
+    @CheckTaskPermissions(permission = TaskPermission.READ)
+    @Override
+    public TimeSlice getLastTimeSliceByTaskId(Long taskId) {
+        return null;
     }
 }

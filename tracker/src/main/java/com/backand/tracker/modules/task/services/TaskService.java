@@ -1,6 +1,5 @@
 package com.backand.tracker.modules.task.services;
 
-import com.backand.tracker.modules.project.Project;
 import com.backand.tracker.modules.task.Task;
 import com.backand.tracker.modules.task.dto.res.TaskDto;
 import com.backand.tracker.modules.user.User;
@@ -8,11 +7,10 @@ import com.backand.tracker.modules.user.User;
 import java.util.List;
 
 public interface TaskService {
-    List<Task> getAllTaskByProjectId(Long projectId);
+    List<TaskDto> getAllDtoByProjectId(Long projectId);
+    TaskDto getDtoById(Long taskId);
+    Task getById(Long taskId);
 
-    Task getTaskById(Long id);
-
-    Task createNewTask(User user, String name, String description, Project project);
-
-    void deleteTask(Long taskId);
+    TaskDto createNew(Long projectId, User user, String name, String description);
+    void delete(Long taskId);
 }

@@ -1,16 +1,11 @@
 package com.backand.tracker.modules.time_slice;
 
-import com.backand.tracker.modules.project.Project;
-import com.backand.tracker.modules.project.service.ProjectService;
-import com.backand.tracker.modules.project_role_permission.ProjectPermission;
-import com.backand.tracker.modules.task.Task;
-import com.backand.tracker.modules.task.services.TaskService;
-import com.backand.tracker.modules.task_role_permission.TaskPermission;
+import com.backand.tracker.annotations.CurrentUser;
+import com.backand.tracker.modules.time_slice.dto.res.TimeSliceDto;
+import com.backand.tracker.modules.time_slice.primitives.TimePoint;
 import com.backand.tracker.modules.time_slice.services.TimeSliceService;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.time_slice.dto.req.TimeSliceStartReqDto;
-import com.backand.tracker.modules.user.services.UserService;
-import com.backand.tracker.utils.UserPermissionsCheck;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,19 +20,12 @@ import java.util.List;
 public class TimeSliceRestControllerV1 {
 
     private TimeSliceService timeSliceService;
-    private UserService userService;
-    private TaskService taskService;
-    private ProjectService projectService;
+
     @Autowired
     public TimeSliceRestControllerV1(
-            TimeSliceService timeSliceService,
-            ProjectService projectService,
-            TaskService taskService,
-            UserService userService) {
+            TimeSliceService timeSliceService
+    ) {
         this.timeSliceService = timeSliceService;
-        this.taskService = taskService;
-        this.projectService = projectService;
-        this.userService = userService;
     }
 
     @Operation(summary = "Возвращает все time-slice таски")
@@ -47,12 +35,10 @@ public class TimeSliceRestControllerV1 {
             Long projectId,
             @PathVariable
             Long taskId,
+            @PathVariable
             Principal principal
     ) {
-        User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
-
-        List<TimeSlice> timeSliceList = timeSliceService.getTaskTimeSlices(taskId);
+        List<TimeSliceDto> timeSliceList = timeSliceService.getAllDtoByTaskId(taskId, new TimePoint(), new TimePoint());
         return new ResponseEntity(timeSliceList, HttpStatus.OK);
     }
 
@@ -64,13 +50,9 @@ public class TimeSliceRestControllerV1 {
             @PathVariable
             Long taskId,
             @PathVariable
-            Long timeSliceId,
-            Principal principal
+            Long timeSliceId
     ) {
-        User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
-
-        TimeSlice timeSlice = timeSliceService.getById(timeSliceId);
+        TimeSliceDto timeSlice = timeSliceService.getDtoById(timeSliceId);
 
         return new ResponseEntity(timeSlice, HttpStatus.OK);
     }
@@ -84,14 +66,9 @@ public class TimeSliceRestControllerV1 {
             Long taskId,
             @RequestBody
             TimeSliceStartReqDto reqDto,
-            Principal principal
+            @CurrentUser User user
     ) {
-        User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
-        Task task = taskService.getTaskById(taskId);
-
-        TimeSlice timeSlice = timeSliceService
-                .start(user, projectId, taskId, reqDto.getName());
+        TimeSliceDto timeSlice = timeSliceService.start(taskId, user, reqDto.getName());
 
         return new ResponseEntity(timeSlice, HttpStatus.OK);
     }
@@ -103,14 +80,9 @@ public class TimeSliceRestControllerV1 {
             Long projectId,
             @PathVariable
             Long taskId,
-            Principal principal
+            @CurrentUser User user
     ) {
-        User user = userService.getUserByUsername(principal.getName());
-        Project project = projectService.getProjectById(projectId);
-        Task task = taskService.getTaskById(taskId);
-
-        TimeSlice timeSlice = timeSliceService
-                .stop(user, projectId, taskId);
+        TimeSliceDto timeSlice = timeSliceService.stop(taskId, user);
 
         return new ResponseEntity(timeSlice, HttpStatus.OK);
     }

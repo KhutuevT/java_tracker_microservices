@@ -11,6 +11,7 @@ import com.backand.tracker.modules.user_project.UserProject;
 import com.backand.tracker.modules.user_project.services.UserProjectService;
 import com.backand.tracker.modules.user_task.UserTask;
 import com.backand.tracker.modules.user.User;
+import com.backand.tracker.modules.user_task.services.UserTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,16 +25,16 @@ import java.util.Objects;
 @Service
 public class UserPermissionsCheck {
 
-    private static ProjectRoleService projectRoleService;
     private static UserProjectService userProjectService;
+    public static UserTaskService userTaskService;
 
     @Autowired
     public UserPermissionsCheck(
-            ProjectRoleService projectRoleService,
-            UserProjectService userProjectService
+            UserProjectService userProjectService,
+            UserTaskService userTaskService
     ) {
-        this.projectRoleService = projectRoleService;
         this.userProjectService = userProjectService;
+        this.userTaskService = userTaskService;
     }
 
     public static boolean inProject(
@@ -43,37 +44,18 @@ public class UserPermissionsCheck {
     ) {
         UserProject userProject = userProjectService.getByProjectIdAndUserId(projectId, user.getId());
         for (ProjectRolePermissions projectRolePermission : userProject.getProjectRole().getProjectRolePermissions()){
-            if(projectRolePermission.getProjectPermission() == projectPermission){
+            if (projectRolePermission.getProjectPermission() == projectPermission){
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean inTask(
-            User user,
-            Task task,
-            TaskPermission taskPermission
-    ) {
-        boolean userIsCreator = Objects.equals(task.getCreator().getId(), user.getId());
-
-        if (userIsCreator) {
-            return true;
-        }
-
-        Collection<UserTask> userTasks = task.getUserTasks();
-
-        for (UserTask userTask : userTasks) {
-            if (Objects.equals(userTask.getUser().getId(), user.getId())) {
-                Collection<TaskRolePermissions> taskRolePermissions = userTask.getTaskRole().getTaskRolePermissions();
-
-                for (TaskRolePermissions taskRolePermission : taskRolePermissions) {
-                    if (taskRolePermission.getTaskPermissions() == taskPermission) {
-                        return true;
-                    }
-                }
-
-                return false;
+    public static boolean inTask(User user, Long taskId, TaskPermission taskPermission) {
+        UserTask userTask = userTaskService.getByTaskIdAndUserId(taskId, user.getId());
+        for (TaskRolePermissions taskRolePermissions : userTask.getTaskRole().getTaskRolePermissions()) {
+            if (taskRolePermissions.getTaskPermissions() == taskPermission) {
+                return true;
             }
         }
         return false;
@@ -91,10 +73,10 @@ public class UserPermissionsCheck {
 
     public static void inTaskWithException(
             User user,
-            Task task,
+            Long taskId,
             TaskPermission taskPermission
     ) {
-        if (!inTask(user, task, taskPermission)) {
+        if (!inTask(user, taskId, taskPermission)) {
             throw new AccessDeniedException("Access denied!");
         }
     }

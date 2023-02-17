@@ -44,7 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Transactional
     @Override
-    public ProjectDto createNewProject(CreateProjectReqDto createProjectReqDto, User user) {
+    public ProjectDto createNew(CreateProjectReqDto createProjectReqDto, User user) {
         Project project = new Project.Builder(createProjectReqDto.getName(), user)
                 .descriptions(createProjectReqDto.getDescriptions())
                 .build();
@@ -72,8 +72,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @CheckProjectPermissions(permission = ProjectPermission.UPDATE)
     @Override
-    public ProjectDto updateProjectAvatar(Long projectId, User user, String avatarName) {
-        Project project = getProjectById(projectId);
+    public ProjectDto updateAvatar(Long projectId, User user, String avatarName) {
+        Project project = getById(projectId);
         project.setImage(avatarName);
         Project updatedProject = projectRepository.save(project);
         return projectMapper.toDto(updatedProject);
@@ -81,7 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @CheckProjectPermissions(permission = ProjectPermission.DELETE)
     @Override
-    public void deleteProject(
+    public void delete(
             Long projectId
     ) {
         projectRepository.deleteById(projectId);
@@ -89,19 +89,19 @@ public class ProjectServiceImpl implements ProjectService {
 
     @CheckProjectPermissions(permission = ProjectPermission.UPDATE)
     @Override
-    public ProjectDto updateProject(Long projectId, UpdateProjectReqDto updateProjectReqDto, User user) {
+    public ProjectDto update(Long projectId, UpdateProjectReqDto updateProjectReqDto, User user) {
         return null;
     }
 
     @CheckProjectPermissions(permission = ProjectPermission.READ)
     @Override
-    public ProjectDto getProjectDtoById(Long id, User user) {
-        return projectMapper.toDto(getProjectById(id));
+    public ProjectDto getDtoById(Long id, User user) {
+        return projectMapper.toDto(getById(id));
     }
 
     @CheckProjectPermissions(permission = ProjectPermission.READ)
     @Override
-    public Project getProjectById(Long id) {
+    public Project getById(Long id) {
         return projectRepository.getProjectById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Project not found!"));
     }

@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
-public class CheckProjectPermissionsAspect {
-    @Around("@annotation(checkProjectPermissions) && execution(* *(Long, ..))")
-    public void checkProjectPermissionsMethod(JoinPoint joinPoint, CheckProjectPermissions checkProjectPermissions) {
+public class CheckTaskPermissionsAspect {
+    @Around("@annotation(checkTaskPermissions) && execution(* *(Long, Long, ..))")
+    public void checkTaskPermissionMethod(JoinPoint joinPoint, CheckTaskPermissions checkTaskPermissions){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = (User) userDetails;
-        UserPermissionsCheck.inProjectWithException(user, (Long) joinPoint.getArgs()[0], checkProjectPermissions.permission());
+        UserPermissionsCheck.inTaskWithException(user, (Long) joinPoint.getArgs()[1], checkTaskPermissions.permission());
     }
 }

@@ -11,6 +11,8 @@ public interface UserTaskService {
 
     UserTask getUserTaskById(Long id);
 
+    UserTask getByTaskIdAndUserId(Long taskId, Long userId);
+
     void addTaskExecutor(User user, Long taskId, Long projectId, Long taskExecutorUserId);
 
     void deleteTaskExecutor(User user, Long taskId, Long projectId, Long taskExecutorUserId);
