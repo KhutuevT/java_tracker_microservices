@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskRolePermissionsDto extends AbstractDto {
+    private Long id;
     private Long taskRoleId;
     private TaskPermission taskPermissions;
 }

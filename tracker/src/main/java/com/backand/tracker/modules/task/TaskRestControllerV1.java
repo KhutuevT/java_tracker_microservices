@@ -1,12 +1,10 @@
 package com.backand.tracker.modules.task;
 
 import com.backand.tracker.annotations.CurrentUser;
-import com.backand.tracker.modules.project.service.ProjectService;
 import com.backand.tracker.modules.task.dto.req.CreateTaskReqDto;
 import com.backand.tracker.modules.task.dto.res.TaskDto;
 import com.backand.tracker.modules.task.services.TaskService;
 import com.backand.tracker.modules.user.User;
-import com.backand.tracker.modules.user.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,20 +19,24 @@ import java.util.List;
 public class TaskRestControllerV1 {
 
     private final TaskService taskService;
-    private final UserService userService;
-    private final ProjectService projectService;
     private final TaskMapper taskMapper;
 
     @Autowired
     public TaskRestControllerV1(
-            ProjectService projectService,
             TaskService taskService,
-            UserService userService,
-            TaskMapper taskMapper) {
+            TaskMapper taskMapper
+    ) {
         this.taskService = taskService;
-        this.projectService = projectService;
         this.taskMapper = taskMapper;
-        this.userService = userService;
+    }
+
+    @GetMapping("/test")
+    ResponseEntity<?> test(){
+        //String test = taskService.test();
+        //System.out.println(test);
+        TaskDto taskDto = taskService.getDtoById(1L);
+        System.out.println(taskDto);
+        return new ResponseEntity<>("qwe", HttpStatus.OK);
     }
 
     @Operation(summary = "Возвращает таски по id")
@@ -45,9 +47,10 @@ public class TaskRestControllerV1 {
             @PathVariable
             Long taskId
     ) {
-        Task task = taskService.getById(taskId);
+        System.out.println("Возвращает таски по id");
+        TaskDto taskDto = taskService.getDtoById(taskId);
 
-        TaskDto taskDto = taskMapper.toDto(task);
+        System.out.println(taskDto);
         return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 
@@ -72,12 +75,7 @@ public class TaskRestControllerV1 {
             @CurrentUser User user
     ) {
         TaskDto taskDto = taskService
-                .createNew(
-                        projectId,
-                        user,
-                        reqDto.getName(),
-                        reqDto.getDescriptions()
-                );
+                .createNew(projectId, user, reqDto);
 
         return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }

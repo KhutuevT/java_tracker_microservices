@@ -15,10 +15,11 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectRoleDto extends AbstractDto {
+    private Long id;
     private String name;
     private Long creatorId;
     private Long projectId;
     private Collection<ProjectRolePermissionsDto> projectRolePermissions;
-    private Collection<UserProjectDto> userProjects;
+    //private Collection<UserProjectDto> userProjects;
 }
 

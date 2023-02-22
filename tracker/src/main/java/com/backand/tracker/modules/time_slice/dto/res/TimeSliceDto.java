@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimeSliceDto extends AbstractDto {
+    private Long id;
     private String name;
     private TimePoint startTimePoint;
     private TimePoint endTimePoint;

@@ -19,7 +19,8 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto extends AbstractDto {
-    String username;
+    private Long id;
+    private String username;
     private EmailAddress emailAddress;
     private Collection<ProjectRoleDto> createdProjectRoles;
     private Collection<TaskRoleDto> createdTaskRoles;

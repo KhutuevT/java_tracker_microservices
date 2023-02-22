@@ -6,6 +6,7 @@ import com.backand.tracker.modules.user_project.UserProject;
 import com.backand.tracker.modules.user_project.services.UserProjectService;
 import com.backand.tracker.modules.user.User;
 import com.backand.tracker.modules.user_project.UserProjectRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,8 @@ public class UserProjectServiceImpl implements UserProjectService {
 
     @Override
     public UserProject getByProjectIdAndUserId(Long projectId, Long userId) {
-        return userProjectRepository.findUserProjectByProjectIdAndUserId(projectId, userId);
+        return userProjectRepository.findUserProjectByProjectIdAndUserId(projectId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("User project not found!"));
     }
 
     @Override

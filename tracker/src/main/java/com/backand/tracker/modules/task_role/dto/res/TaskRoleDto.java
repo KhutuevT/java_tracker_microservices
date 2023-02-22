@@ -15,9 +15,10 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskRoleDto extends AbstractDto {
+    private Long id;
     private String name;
     private Long creatorId;
     private Long taskId;
     private Collection<TaskRolePermissionsDto> taskRolePermissions;
-    private Collection<UserTaskDto> userTasks;
+    //private Collection<UserTaskDto> userTasks;
 }

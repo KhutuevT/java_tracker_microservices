@@ -44,19 +44,14 @@ public class ProjectRestControllerV1 {
         this.projectMapper = projectMapper;
     }
 
-
     @Operation(summary = "Возвращает проект по projectId")
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDto> getById(
             @Parameter(description = "id проекта")
             @PathVariable
-            Long projectId,
-            @CurrentUser
-            User user
+            Long projectId
     ) {
-        Project project = projectService.getById(projectId);
-        System.out.println(user);
-        ProjectDto projectDto = projectService.getDtoById(projectId, user);
+        ProjectDto projectDto = projectService.getDtoById(projectId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(projectDto);
@@ -99,7 +94,6 @@ public class ProjectRestControllerV1 {
             @PathVariable Long projectId,
             @CurrentUser User user
             ) {
-        Project project = projectService.getById(projectId);
         projectService.delete(projectId);
         return new ResponseEntity("OK", HttpStatus.OK);
     }

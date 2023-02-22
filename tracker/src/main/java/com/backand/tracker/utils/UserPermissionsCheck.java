@@ -44,7 +44,8 @@ public class UserPermissionsCheck {
     ) {
         UserProject userProject = userProjectService.getByProjectIdAndUserId(projectId, user.getId());
         for (ProjectRolePermissions projectRolePermission : userProject.getProjectRole().getProjectRolePermissions()){
-            if (projectRolePermission.getProjectPermission() == projectPermission){
+            System.out.println(projectRolePermission );
+            if ((projectRolePermission.getProjectPermission() == projectPermission) || (projectRolePermission.getProjectPermission() == ProjectPermission.ADMIN)){
                 return true;
             }
         }

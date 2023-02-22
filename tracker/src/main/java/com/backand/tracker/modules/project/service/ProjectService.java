@@ -11,6 +11,6 @@ public interface ProjectService {
     ProjectDto updateAvatar(Long projectId, User user, String avatarName);
     void delete(Long projectId);
     ProjectDto update(Long projectId, UpdateProjectReqDto updateProjectReqDto, User user);
-    ProjectDto getDtoById(Long projectId, User user);
+    ProjectDto getDtoById(Long projectId);
     Project getById(Long id);
 }

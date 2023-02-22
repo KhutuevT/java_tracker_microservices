@@ -5,5 +5,5 @@ import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.user.User;
 
 public interface ProjectRolePermissionsService {
-    void addNewPermissionInProjectRole(User user, ProjectRole projectRole, ProjectPermission projectPermissions);
+    void addNewPermissionInProjectRole(ProjectRole projectRole, ProjectPermission projectPermissions);
 }

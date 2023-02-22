@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProjectDto extends AbstractDto {
+    private Long id;
     private Long userId;
     private Long projectId;
     private Long projectRoleId;

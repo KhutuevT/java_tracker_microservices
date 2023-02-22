@@ -22,7 +22,6 @@ public class ProjectRolePermissionsServiceImpl implements ProjectRolePermissions
 
     @Override
     public void addNewPermissionInProjectRole(
-            User user,
             ProjectRole projectRole,
             ProjectPermission projectPermissions
     ) {

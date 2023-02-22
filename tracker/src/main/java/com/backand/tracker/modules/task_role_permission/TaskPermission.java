@@ -8,5 +8,6 @@ public enum TaskPermission {
     ADD_USER,
     DELETE_USER,
     CREATE_ROLE,
-    DELETE_ROLE
+    DELETE_ROLE,
+    ADMIN
 }

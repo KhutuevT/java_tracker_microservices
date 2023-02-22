@@ -10,6 +10,7 @@ import com.backand.tracker.modules.project.dto.res.ProjectDto;
 import com.backand.tracker.modules.project_role.ProjectRole;
 import com.backand.tracker.modules.project_role.ProjectRoleRepository;
 import com.backand.tracker.modules.project_role.services.ProjectRoleService;
+import com.backand.tracker.modules.project_role_permission.services.ProjectRolePermissionsService;
 import com.backand.tracker.modules.user_project.services.UserProjectService;
 import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.user.User;
@@ -27,6 +28,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectRoleRepository projectRoleRepository;
     private final UserProjectService userProjectService;
+    private final ProjectRolePermissionsService projectRolePermissionsService;
 
     @Autowired
     public ProjectServiceImpl(
@@ -34,12 +36,13 @@ public class ProjectServiceImpl implements ProjectService {
             @Lazy ProjectRoleService projectRoleService,
             ProjectMapper projectMapper,
             ProjectRoleRepository projectRoleRepository,
-            UserProjectService userProjectService) {
+            UserProjectService userProjectService, ProjectRolePermissionsService projectRolePermissionsService) {
         this.projectRepository = projectRepository;
         this.projectRoleService = projectRoleService;
         this.projectMapper = projectMapper;
         this.projectRoleRepository = projectRoleRepository;
         this.userProjectService = userProjectService;
+        this.projectRolePermissionsService = projectRolePermissionsService;
     }
 
     @Transactional
@@ -51,16 +54,20 @@ public class ProjectServiceImpl implements ProjectService {
         Project saveProject = projectRepository.save(project);
 
         //При создании проекта создаётся базовая роль для чтения
-        projectRoleService
-                .createNew(String.valueOf(ProjectPermission.READ),
+        ProjectRole onlyReadRole = projectRoleService
+                .createNew("ONLY READ",
                         user,
                         saveProject.getId());
 
+        projectRolePermissionsService.addNewPermissionInProjectRole(onlyReadRole, ProjectPermission.READ);
+
         //А так же роль администратора проекта
         ProjectRole adminProjectRole = projectRoleService
-                .createNew(String.valueOf(ProjectPermission.ADMIN),
+                .createNew("PROJECT ADMIN",
                         user,
                         saveProject.getId());
+
+        projectRolePermissionsService.addNewPermissionInProjectRole(adminProjectRole, ProjectPermission.ADMIN);
 
         userProjectService
                 .createNewUserProject(user,
@@ -93,9 +100,10 @@ public class ProjectServiceImpl implements ProjectService {
         return null;
     }
 
+
     @CheckProjectPermissions(permission = ProjectPermission.READ)
     @Override
-    public ProjectDto getDtoById(Long id, User user) {
+    public ProjectDto getDtoById(Long id) {
         return projectMapper.toDto(getById(id));
     }
 

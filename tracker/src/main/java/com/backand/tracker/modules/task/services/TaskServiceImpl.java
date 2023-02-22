@@ -7,6 +7,7 @@ import com.backand.tracker.modules.project.service.ProjectService;
 import com.backand.tracker.modules.project_role_permission.ProjectPermission;
 import com.backand.tracker.modules.task.Task;
 import com.backand.tracker.modules.task.TaskMapper;
+import com.backand.tracker.modules.task.dto.req.CreateTaskReqDto;
 import com.backand.tracker.modules.task.dto.res.TaskDto;
 import com.backand.tracker.modules.task_role_permission.TaskPermission;
 import com.backand.tracker.modules.user.User;
@@ -34,6 +35,11 @@ public class TaskServiceImpl implements TaskService {
         this.projectService = projectService;
     }
 
+    @Override
+    public String test(){
+        return "HELLO!";
+    }
+
     @CheckProjectPermissions(permission = ProjectPermission.READ)
     @Override
     public List<TaskDto> getAllDtoByProjectId(Long projectId) {
@@ -46,7 +52,9 @@ public class TaskServiceImpl implements TaskService {
     @CheckProjectPermissions(permission = ProjectPermission.READ)
     @Override
     public TaskDto getDtoById(Long taskId) {
+        System.out.println("getDtoById");
         Task task = getById(taskId);
+        System.out.println(task);
         return taskMapper.toDto(task);
     }
 
@@ -63,12 +71,11 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto createNew(
             Long projectId,
             User user,
-            String name,
-            String description
+            CreateTaskReqDto taskReqDto
     ) {
         Project project = projectService.getById(projectId);
-        Task task = new Task(name,
-                description,
+        Task task = new Task(taskReqDto.getName(),
+                taskReqDto.getDescriptions(),
                 project,
                 user
         );
